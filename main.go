@@ -22,10 +22,22 @@ func main() {
 }
 
 func initGame() {
+
 	/*
 		эта функция инициализирует игровой мир - все команты
 		если что-то было - оно корректно перезатирается
 	*/
+
+	//создаю мир
+	var graph = Locations.InitializeMap()
+	var kitchen = Locations.CreateRoom("Kitchen")
+	var hall = Locations.CreateRoom("hall")
+	graph.AddRoom(kitchen)
+	fmt.Printf("%T\n", graph)
+	graph.AddRoom(hall)
+	graph.AddRoom(hall)
+	graph.AddEdge(kitchen, hall)
+	graph.PrintMap()
 	var name string
 	_, err := fmt.Scanln(&name)
 	if err != nil {
@@ -33,18 +45,24 @@ func initGame() {
 		return
 	}
 	fmt.Println(name)
-	var player = Player.NewPlayer(name)
+	var player = Player.NewPlayer(name, kitchen)
 	player.GetPlayerInfo()
 	player.GetBackPack()
 	player.GetPlayerInfo()
+	//
 
-	var graph = Locations.InitializeMap()
-	var kitchen = Locations.CreateNode("kitchen")
-	var hall = Locations.CreateNode("hall")
-	graph.AddNode(kitchen)
-	graph.AddNode(hall)
-	graph.AddEdge(kitchen, hall)
-	graph.PrintGraph()
+	for true {
+		var command string
+		var property string
+		fmt.Println("Введите команду")
+		_, err := fmt.Scan(&command, &property)
+		if err != nil {
+			fmt.Println(err)
+		}
+		handleCommand(command)
+		continue
+	}
+
 }
 
 func handleCommand(command string) string {
@@ -52,5 +70,12 @@ func handleCommand(command string) string {
 		данная функция принимает команду от "пользователя"
 		и наверняка вызывает какой-то другой метод или функцию у "мира" - списка комнат
 	*/
+	switch command {
+	case "идти":
+
+	}
+	fmt.Println()
+	fmt.Printf("Твоя комманда %v", command)
+	fmt.Println()
 	return "not implemented"
 }

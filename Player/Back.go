@@ -2,14 +2,12 @@ package Player
 
 import (
 	"errors"
-	"game/nurlan/Locations"
 	"strings"
 )
 
 type Back struct {
 	items    []string
 	capacity int
-	Locations.IItem
 }
 
 //func ItemMakeAction(p *Player) *Back {

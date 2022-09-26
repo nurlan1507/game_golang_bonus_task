@@ -2,6 +2,7 @@ package Player
 
 import (
 	"fmt"
+	"game/nurlan/Locations"
 )
 
 type IInventory interface {
@@ -46,12 +47,14 @@ func (I *Inventory) PrintItems() string {
 type Player struct {
 	nickname  string
 	Inventory *Inventory
+	Location  *Locations.Node
 }
 
-func NewPlayer(nickname string) *Player {
+func NewPlayer(nickname string, location *Locations.Node) *Player {
 	var newPlayer = Player{
 		nickname:  nickname,
 		Inventory: nil,
+		Location:  location,
 	}
 	return &newPlayer
 }

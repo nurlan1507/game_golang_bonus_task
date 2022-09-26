@@ -2,12 +2,8 @@ package Locations
 
 type INode interface {
 	ItemMakeAction() string
-}
-
-type Room struct {
-	INode
-	RoomName    string
-	RoomObjects []*RoomObject
+	AddObject()
+	RemoveObject()
 }
 
 type RoomObject struct {
