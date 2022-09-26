@@ -1,6 +1,8 @@
-package Locations
+package Player
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type IGameMap interface {
 	AddRoom(node *Node) *Node
@@ -13,8 +15,10 @@ type GameMap struct {
 	Edges map[*Node][]*Node
 }
 type Node struct {
-	GameObject any
-	Name       string
+	Name            string
+	GameObjectType  any
+	RoomObjects     []*RoomObject
+	RoomObjectItems []*Item
 }
 
 func (g *GameMap) AddRoom(node *Node) *Node {

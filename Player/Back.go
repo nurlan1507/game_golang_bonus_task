@@ -2,40 +2,43 @@ package Player
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
 type Back struct {
-	items    []string
-	capacity int
+	Item
+	Items    []string
+	Capacity int
 }
 
-//func ItemMakeAction(p *Player) *Back {
-//	var newBack = Back{
-//		items:    []string{},
-//		capacity: 10,
-//	}
-//	var newInventory = new(Inventory)
-//	p.Inventory = newInventory
-//	fmt.Println("был создан инвентарь размером" + string(newBack.capacity))
-//	return &newBack
-//}
+func (b *Back) ItemMakeAction(p *Player) string {
+	var newBack = Back{
+		Items:    []string{},
+		Capacity: 10,
+	}
+	var newInventory = new(Inventory)
+	p.Inventory = newInventory
+	fmt.Println("был создан инвентарь размером" + string(rune(newBack.Capacity)))
+	return ""
+
+}
 
 func (b *Back) AddItem(item string) (*Back, error) {
-	if len(b.items) == b.capacity {
+	if len(b.Items) == b.Capacity {
 		return nil, errors.New("inventory is full")
 	}
-	b.items = append(b.items, item)
+	b.Items = append(b.Items, item)
 	return b, nil
 }
 
 func (b *Back) RemoveItem(item string) (*Back, error) {
-	if len(b.items) == 0 {
+	if len(b.Items) == 0 {
 		return nil, errors.New("inventory is empty")
 	} else {
-		for i, v := range b.items {
+		for i, v := range b.Items {
 			if v == item {
-				b.items = append(b.items[:i], b.items[i+1])
+				b.Items = append(b.Items[:i], b.Items[i+1])
 				return b, nil
 			}
 		}
@@ -44,5 +47,5 @@ func (b *Back) RemoveItem(item string) (*Back, error) {
 }
 
 func (b *Back) PrintAll() string {
-	return strings.Join(b.items, ",")
+	return strings.Join(b.Items, ",")
 }

@@ -2,14 +2,20 @@ package main
 
 import (
 	"fmt"
-	"game/nurlan/Locations"
+	CommandsClass "game/nurlan/Commands"
 	"game/nurlan/Player"
+	"strings"
 )
 
 /*
-	код писать в этом файле
-	наверняка у вас будут какие-то структуры с методами, глобальные перменные ( тут можно ), функции
+код писать в этом файле
+наверняка у вас будут какие-то структуры с методами, глобальные перменные ( тут можно ), функции
 */
+var Graph = Player.InitializeMap()
+var ActivePerson = Player.NewPlayer("")
+var Commands = CommandsClass.Command{Player: ActivePerson, GameMap: Graph}
+
+//var ActivePlayer = Player.NewPlayer()
 
 func main() {
 	/*
@@ -29,53 +35,46 @@ func initGame() {
 	*/
 
 	//создаю мир
-	var graph = Locations.InitializeMap()
-	var kitchen = Locations.CreateRoom("Kitchen")
-	var hall = Locations.CreateRoom("hall")
-	graph.AddRoom(kitchen)
-	fmt.Printf("%T\n", graph)
-	graph.AddRoom(hall)
-	graph.AddRoom(hall)
-	graph.AddEdge(kitchen, hall)
-	graph.PrintMap()
+
+	var kitchen = Player.CreateRoom("кухня", nil)
+	var hall = Player.CreateRoom("коридор", nil)
+	Graph.AddRoom(kitchen)
+	Graph.AddRoom(hall)
+	Graph.AddEdge(kitchen, hall)
+	Graph.PrintMap()
 	var name string
 	_, err := fmt.Scanln(&name)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(name)
-	var player = Player.NewPlayer(name, kitchen)
-	player.GetPlayerInfo()
-	player.GetBackPack()
-	player.GetPlayerInfo()
+	//fmt.Println(name)
+	ActivePerson.Nickname = name
+	//ActivePerson.ChangeLocation(kitchen)
+	//ActivePerson.GetBackPack()
+	//ActivePerson.GetPlayerInfo()
 	//
-
 	for true {
-		var command string
-		var property string
-		fmt.Println("Введите команду")
-		_, err := fmt.Scan(&command, &property)
+		var commandString string
+		_, err := fmt.Scan(&commandString)
+		command := strings.Split(commandString, " ")
+		fmt.Println(command)
 		if err != nil {
 			fmt.Println(err)
 		}
-		handleCommand(command)
+		handleCommand(commandString)
 		continue
 	}
 
 }
 
-func handleCommand(command string) string {
-	/*
-		данная функция принимает команду от "пользователя"
-		и наверняка вызывает какой-то другой метод или функцию у "мира" - списка комнат
-	*/
-	switch command {
+func handleCommand(commandString string) string {
+	command := strings.Split(commandString, " ")
+	switch command[0] {
+	case "осмотреться":
+		fmt.Println(Commands.LookAround())
 	case "идти":
-
+		fmt.Println(Commands.Go(command[1]))
 	}
-	fmt.Println()
-	fmt.Printf("Твоя комманда %v", command)
-	fmt.Println()
 	return "not implemented"
 }

@@ -1,11 +1,11 @@
 package Player
 
-import "game/nurlan/Locations"
-
+// key
 type Key struct {
-	Locations.Item
+	Item
+	name string
 }
 
-func (k *Key) ItemMakeAction() string {
-	return "дверь открыта"
+func (k *Key) ItemMakeAction(p *Player) string {
+	return "i am a key"
 }

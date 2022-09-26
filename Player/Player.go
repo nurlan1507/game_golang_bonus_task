@@ -2,7 +2,6 @@ package Player
 
 import (
 	"fmt"
-	"game/nurlan/Locations"
 )
 
 type IInventory interface {
@@ -45,35 +44,35 @@ func (I *Inventory) PrintItems() string {
 }
 
 type Player struct {
-	nickname  string
+	Nickname  string
 	Inventory *Inventory
-	Location  *Locations.Node
+	Location  *Node
 }
 
-func NewPlayer(nickname string, location *Locations.Node) *Player {
+func NewPlayer(nickname string) *Player {
 	var newPlayer = Player{
-		nickname:  nickname,
+		Nickname:  nickname,
 		Inventory: nil,
-		Location:  location,
 	}
 	return &newPlayer
 }
-func (P *Player) GetBackPack() {
+
+func (p *Player) ChangeLocation(location *Node) {
+	p.Location = location
+}
+func (p *Player) GetBackPack() {
 	var newBack = Back{
-		items:    []string{},
-		capacity: 10,
+		Items:    []string{},
+		Capacity: 10,
 	}
 	var newInventory = new(Inventory)
 	newInventory.Items = &newBack
-	P.Inventory = newInventory
+	p.Inventory = newInventory
 	fmt.Println("был создан инвентарь размером")
 }
 
-func (P *Player) ChangeLocation() {
-
-}
-
-func (P *Player) GetPlayerInfo() {
-	fmt.Printf("\n player name: %+v", P.nickname)
-	fmt.Printf("\n inventory: %v \n", P.Inventory.PrintItems())
+func (p *Player) GetPlayerInfo() {
+	fmt.Printf("\n player name: %+v", p.Nickname)
+	fmt.Printf("\n inventory: %v \n", p.Inventory.PrintItems())
+	fmt.Printf("current location : %v \n", p.Location.Name)
 }
