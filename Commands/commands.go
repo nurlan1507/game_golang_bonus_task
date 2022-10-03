@@ -1,6 +1,7 @@
 package Commands
 
 import (
+	"fmt"
 	"game/nurlan/Player"
 )
 
@@ -12,29 +13,69 @@ type Command struct {
 func (c *Command) LookAround() string {
 	var currentLocation = c.Player.Location
 	var availableLocations = c.GameMap.Edges[currentLocation]
+	//var RoomObjects map[string]*Player.Item = currentLocation.RoomObjects
 	var availablePaths string
 	for _, v := range availableLocations {
 		availablePaths = availablePaths + v.Name + ", "
 	}
-	switch currentLocation.Name {
-	case "кухня":
-		return "ты находишься на кухне, на столе: чай, надо собрать рюкзак и идти в универ. можно пройти - " + availablePaths
+	var availableRoomObjectsString string = ""
+	for k, v := range currentLocation.RoomObjects {
+		var objects string = ""
+		for _, v := range v {
+			objects += v.ItemName + ", "
+		}
+		availableRoomObjectsString = availableRoomObjectsString + fmt.Sprintf("на %ve: %v", k, objects)
 	}
-	return "ты находишься на " + currentLocation.Name + ""
+
+	return availableRoomObjectsString + "можно пройти - " + availablePaths
+}
+
+func (c *Command) FirstLookAround() string {
+	var currentLocation = c.Player.Location
+	var availableLocations = c.GameMap.Edges[currentLocation]
+
+	//var RoomObjects map[string]*Player.Item = currentLocation.RoomObjects
+	var availablePaths string
+	for _, v := range availableLocations {
+		availablePaths = availablePaths + ", " + v.Name
+	}
+	var availableRoomObjectsString string = ""
+	currentLocationString := fmt.Sprintf("ты находишься на %vе ,", currentLocation.Name)
+	for k, v := range currentLocation.RoomObjects {
+		var objects string = ""
+		for _, v := range v {
+			objects += v.ItemName + ", "
+		}
+		availableRoomObjectsString = availableRoomObjectsString + fmt.Sprintf("на %ve: %v", k, objects)
+	}
+	return currentLocationString + availableRoomObjectsString + ",надо собрать рюкзак и идти в универ. " + "можно пройти - " + availablePaths
 }
 
 func (c *Command) Go(goTo string) string {
-	//проверить если есть эта комната
-	var availableLocation = c.GameMap.Edges[c.Player.Location]
+	var availableLocations = c.GameMap.Edges[c.Player.Location]
 	var destinationNode *Player.Node = nil
-	for _, v := range availableLocation {
+	for _, v := range availableLocations {
+
 		if v.Name == goTo {
 			destinationNode = v
 		}
 	}
 	if destinationNode == nil {
-		return "нет пути в " + destinationNode.Name
+		return fmt.Sprintf("нет пути в %v", goTo)
 	}
 	c.Player.Location = destinationNode
-	return ""
+
+	return c.DefineWhatInRoom()
+}
+
+func (c *Command) DefineWhatInRoom() string {
+	var availableLocations = c.GameMap.Edges[c.Player.Location]
+	var availableLocationsString string
+	for _, v := range availableLocations {
+		availableLocationsString += v.Name + " ,"
+	}
+	if len(c.Player.Location.RoomObjects) == 0 {
+		return "ничего интересного. можно пройти - " + availableLocationsString + "."
+	}
+	return fmt.Sprintf("ты в своей %v, можно пройти - %v", c.Player.Location.Name, availableLocationsString)
 }

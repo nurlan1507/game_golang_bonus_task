@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	CommandsClass "game/nurlan/Commands"
 	"game/nurlan/Player"
+	"os"
 	"strings"
 )
 
@@ -14,7 +16,7 @@ import (
 var Graph = Player.InitializeMap()
 var ActivePerson = Player.NewPlayer("")
 var Commands = CommandsClass.Command{Player: ActivePerson, GameMap: Graph}
-
+var Step = 0 //количество ходов который сделает игрок
 //var ActivePlayer = Player.NewPlayer()
 
 func main() {
@@ -23,6 +25,7 @@ func main() {
 		но тогда у вас не будет работать через go run main.go
 		очень круто будет сделать построчный ввод команд тут, хотя это и не требуется по заданию
 	*/
+
 	initGame()
 
 }
@@ -36,12 +39,19 @@ func initGame() {
 
 	//создаю мир
 
-	var kitchen = Player.CreateRoom("кухня", nil)
-	var hall = Player.CreateRoom("коридор", nil)
+	var kitchen = Player.CreateRoom("кухня")
+	kitchen.RoomObjects = make(map[string][]*Player.Item)
+	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &Player.Item{ItemName: "коспект"})
+	var hall = Player.CreateRoom("коридор")
+	var outside = Player.CreateRoom("улица")
 	Graph.AddRoom(kitchen)
 	Graph.AddRoom(hall)
-	Graph.AddEdge(kitchen, hall)
+	Graph.AddRoom(outside)
+	Graph.ConnectRooms(kitchen, hall)
+	Graph.ConnectRooms(hall, outside)
+	Graph.ConnectRooms(kitchen, outside)
 	Graph.PrintMap()
+
 	var name string
 	_, err := fmt.Scanln(&name)
 	if err != nil {
@@ -50,31 +60,37 @@ func initGame() {
 	}
 	//fmt.Println(name)
 	ActivePerson.Nickname = name
-	//ActivePerson.ChangeLocation(kitchen)
+	ActivePerson.ChangeLocation(kitchen)
 	//ActivePerson.GetBackPack()
 	//ActivePerson.GetPlayerInfo()
 	//
 	for true {
-		var commandString string
-		_, err := fmt.Scan(&commandString)
-		command := strings.Split(commandString, " ")
-		fmt.Println(command)
-		if err != nil {
-			fmt.Println(err)
-		}
-		handleCommand(commandString)
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Print("Введите команду: ")
+		text, _ := reader.ReadString('\n')
+		fmt.Println(handleCommand(text))
+		Step++
 		continue
 	}
 
 }
 
 func handleCommand(commandString string) string {
-	command := strings.Split(commandString, " ")
-	switch command[0] {
+	commands := Split(commandString)
+	fmt.Println(commands)
+	switch commands[0] {
 	case "осмотреться":
-		fmt.Println(Commands.LookAround())
+		if Step == 0 {
+			return Commands.FirstLookAround()
+		}
+		return Commands.LookAround()
 	case "идти":
-		fmt.Println(Commands.Go(command[1]))
+		return Commands.Go(commands[1])
 	}
 	return "not implemented"
+}
+
+func Split(str string) []string {
+	arr := strings.Split(str, " ")
+	return arr
 }

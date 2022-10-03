@@ -15,10 +15,9 @@ type GameMap struct {
 	Edges map[*Node][]*Node
 }
 type Node struct {
-	Name            string
-	GameObjectType  any
-	RoomObjects     []*RoomObject
-	RoomObjectItems []*Item
+	Name           string
+	GameObjectType any
+	RoomObjects    map[string][]*Item
 }
 
 func (g *GameMap) AddRoom(node *Node) *Node {
@@ -39,6 +38,11 @@ func (g *GameMap) AddEdge(from *Node, to *Node) {
 	} else {
 		g.Edges[from] = append(g.Edges[from], to)
 	}
+}
+
+func (g *GameMap) ConnectRooms(from *Node, to *Node) {
+	g.AddEdge(from, to)
+	g.AddEdge(to, from)
 }
 
 func (g *GameMap) PrintMap() {
