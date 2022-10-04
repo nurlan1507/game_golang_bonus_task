@@ -1,6 +1,7 @@
 package Commands
 
 import (
+	"errors"
 	"fmt"
 	"game/nurlan/Player"
 )
@@ -55,7 +56,6 @@ func (c *Command) Go(goTo string) string {
 	var availableLocations = c.GameMap.Edges[c.Player.Location]
 	var destinationNode *Player.Node = nil
 	for _, v := range availableLocations {
-
 		if v.Name == goTo {
 			destinationNode = v
 		}
@@ -78,4 +78,36 @@ func (c *Command) DefineWhatInRoom() string {
 		return "ничего интересного. можно пройти - " + availableLocationsString + "."
 	}
 	return fmt.Sprintf("ты в своей %v, можно пройти - %v", c.Player.Location.Name, availableLocationsString)
+}
+
+func (c *Command) TakeItem(itemName string) string {
+	var desiredItem, err = c.FindItem(c.Player.Location, itemName)
+	if err != nil {
+		return err.Error()
+	}
+	return desiredItem.ItemInstance.ItemInitAction(c.Player)
+}
+
+func (c *Command) FindItem(location *Player.Node, itemName string) (*Player.Item, error) {
+	var desiredItem *Player.Item = nil
+	if c.Player.Location != location {
+		return nil, errors.New("нет такого")
+	}
+	var RoomObjectKey string
+	for k, _ := range c.Player.Location.RoomObjects {
+		RoomObjectKey = k
+	}
+	for _, v := range c.Player.Location.RoomObjects[RoomObjectKey] {
+		if itemName == v.ItemName {
+			desiredItem = v
+		}
+	}
+	if desiredItem == nil {
+		return nil, errors.New("нет такого")
+	}
+	return desiredItem, nil
+}
+
+func (c *Command) getBack() {
+
 }

@@ -39,31 +39,14 @@ func initGame() {
 
 	//создаю мир
 
-	var kitchen = Player.CreateRoom("кухня")
-	kitchen.RoomObjects = make(map[string][]*Player.Item)
-	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &Player.Item{ItemName: "коспект"})
-	var hall = Player.CreateRoom("коридор")
-	var outside = Player.CreateRoom("улица")
-	Graph.AddRoom(kitchen)
-	Graph.AddRoom(hall)
-	Graph.AddRoom(outside)
-	Graph.ConnectRooms(kitchen, hall)
-	Graph.ConnectRooms(hall, outside)
-	Graph.ConnectRooms(kitchen, outside)
-	Graph.PrintMap()
-
+	INITMAP()
 	var name string
 	_, err := fmt.Scanln(&name)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	//fmt.Println(name)
 	ActivePerson.Nickname = name
-	ActivePerson.ChangeLocation(kitchen)
-	//ActivePerson.GetBackPack()
-	//ActivePerson.GetPlayerInfo()
-	//
 	for true {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("Введите команду: ")
@@ -77,7 +60,6 @@ func initGame() {
 
 func handleCommand(commandString string) string {
 	commands := Split(commandString)
-	fmt.Println(commands)
 	switch commands[0] {
 	case "осмотреться":
 		if Step == 0 {
@@ -86,6 +68,8 @@ func handleCommand(commandString string) string {
 		return Commands.LookAround()
 	case "идти":
 		return Commands.Go(commands[1])
+	case "взять":
+		return fmt.Sprintf("%v", Commands.TakeItem(commands[1]))
 	}
 	return "not implemented"
 }
@@ -93,4 +77,27 @@ func handleCommand(commandString string) string {
 func Split(str string) []string {
 	arr := strings.Split(str, " ")
 	return arr
+}
+
+func INITMAP() {
+
+	//generate map
+	var kitchen = Player.CreateRoom("кухня")
+	kitchen.RoomObjects = make(map[string][]*Player.Item)
+
+	var hall = Player.CreateRoom("коридор")
+	var outside = Player.CreateRoom("улица")
+	Player.GenerateDoor(outside)
+	Graph.AddRoom(kitchen)
+	Graph.AddRoom(hall)
+	Graph.AddRoom(outside)
+	Graph.ConnectRooms(kitchen, hall)
+	Graph.ConnectRooms(hall, outside)
+	Graph.ConnectRooms(kitchen, outside)
+	ActivePerson.ChangeLocation(kitchen)
+	Graph.PrintMap()
+
+	//generate items
+	back := Player.CreateItem("рюкзак", &Player.Back{Items: nil, Capacity: 10})
+	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], back)
 }

@@ -3,9 +3,9 @@ package Player
 // key
 type Key struct {
 	Item
-	name string
+	Name string
 }
 
-func (k *Key) ItemMakeAction(p *Player) string {
-	return "i am a key"
+func (k *Key) ItemAction(p *Player) string {
+	return ""
 }

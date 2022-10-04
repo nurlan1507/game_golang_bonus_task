@@ -2,29 +2,20 @@ package Player
 
 import (
 	"errors"
-	"fmt"
-	"strings"
 )
 
 type Back struct {
 	Item
-	Items    []string
+	Items    []*Item
 	Capacity int
 }
 
-func (b *Back) ItemMakeAction(p *Player) string {
-	var newBack = Back{
-		Items:    []string{},
-		Capacity: 10,
-	}
-	var newInventory = new(Inventory)
-	p.Inventory = newInventory
-	fmt.Println("был создан инвентарь размером" + string(rune(newBack.Capacity)))
-	return ""
-
+func (b *Back) ItemInitAction(p *Player) string {
+	p.GetBackPack(b)
+	return "ad"
 }
 
-func (b *Back) AddItem(item string) (*Back, error) {
+func (b *Back) AddItem(item *Item) (*Back, error) {
 	if len(b.Items) == b.Capacity {
 		return nil, errors.New("inventory is full")
 	}
@@ -32,7 +23,7 @@ func (b *Back) AddItem(item string) (*Back, error) {
 	return b, nil
 }
 
-func (b *Back) RemoveItem(item string) (*Back, error) {
+func (b *Back) RemoveItem(item *Item) (*Back, error) {
 	if len(b.Items) == 0 {
 		return nil, errors.New("inventory is empty")
 	} else {
@@ -46,6 +37,7 @@ func (b *Back) RemoveItem(item string) (*Back, error) {
 	return nil, errors.New("some error occured")
 }
 
-func (b *Back) PrintAll() string {
-	return strings.Join(b.Items, ",")
-}
+//
+//func (b *Back) PrintAll() string {
+//	return strings.Join(b.Items, ",")
+//}
