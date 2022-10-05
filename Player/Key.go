@@ -18,15 +18,15 @@ func (k *Key) ItemInitAction(p *Player) string {
 	return "добавлено в инвентарь: " + k.Name
 }
 
-//конкретное действия предмета (ключ-открыть и тд)
+// конкретное действия предмета (ключ-открыть и тд)
 func (k *Key) ItemAction(p *Player) string {
 	if p.Location.Door == nil {
 		return "не к чему применить"
 	}
 	p.Location.Door.Status = true // true - открыта
-	_, err := p.Inventory.RemoveItem(k)
-	if err != nil {
-		return "невозможно удалить"
-	}
+	//_, err := p.Inventory.RemoveItem(k)
+	//if err != nil {
+	//	return "невозможно удалить"
+	//}
 	return "дверь открыта"
 }

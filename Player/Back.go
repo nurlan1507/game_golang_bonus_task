@@ -19,7 +19,7 @@ func (b *Back) GetItems(p *Player) string {
 
 func (b *Back) ItemInitAction(p *Player) string {
 	p.GetBackPack(b)
-	return "ad"
+	return "вы надели :рюкзак"
 }
 
 func (b *Back) GetItemName() string {

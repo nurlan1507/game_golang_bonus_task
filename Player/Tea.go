@@ -1,14 +1,15 @@
 package Player
 
-type Conspect struct {
+// key
+type Tea struct {
 	IItem
 	Name string
 }
 
-func (k *Conspect) GetItemName() string {
+func (k *Tea) GetItemName() string {
 	return k.Name
 }
-func (k *Conspect) ItemInitAction(p *Player) string {
+func (k *Tea) ItemInitAction(p *Player) string {
 	_, err := p.Inventory.AddItem(k)
 	//fmt.Println(I.ItemName)
 	if err != nil {
@@ -18,7 +19,7 @@ func (k *Conspect) ItemInitAction(p *Player) string {
 }
 
 // конкретное действия предмета (ключ-открыть и тд)
-func (k *Conspect) ItemAction(p *Player) string {
+func (k *Tea) ItemAction(p *Player) string {
 	if p.Location.Door == nil {
 		return "не к чему применить"
 	}

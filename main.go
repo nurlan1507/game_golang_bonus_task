@@ -69,9 +69,11 @@ func handleCommand(commandString string) string {
 	case "идти":
 		return Commands.Go(commands[1])
 	case "взять":
-		return fmt.Sprintf("%v", Commands.TakeItem(commands[1]))
+		return Commands.TakeItem(commands[1])
 	case "применить":
 		return Commands.UseItem(commands[1], commands[2])
+	case "надеть":
+		return Commands.TakeItem(commands[1])
 	}
 	return "not implemented"
 }
@@ -85,23 +87,26 @@ func INITMAP() {
 
 	//generate map
 	var kitchen = Player.CreateRoom("кухня")
-	//kitchen.RoomObjects = make(map[string][]*Player.Item)
-
+	var room = Player.CreateRoom("комната")
 	var hall = Player.CreateRoom("коридор")
 	var outside = Player.CreateRoom("улица")
 	hall.Door = Player.GenerateDoor(outside)
+	Graph.AddRoom(room)
 	Graph.AddRoom(kitchen)
 	Graph.AddRoom(hall)
 	Graph.AddRoom(outside)
 	Graph.ConnectRooms(kitchen, hall)
 	Graph.ConnectRooms(hall, outside)
-	Graph.ConnectRooms(kitchen, outside)
+	Graph.ConnectRooms(hall, room)
 	ActivePerson.ChangeLocation(kitchen)
 	Graph.PrintMap()
 
 	//generate items
 	back := Player.Back{Items: nil, Capacity: 10, Name: "рюкзак"}
 	key := Player.Key{Name: "ключи"}
-	kitchen.RoomObjects["стул"] = append(kitchen.RoomObjects["стул"], &back)
-	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &key)
+	conspect := Player.Conspect{Name: "конспекты"}
+	tea := Player.Tea{Name: "чай"}
+	room.RoomObjects["стул"] = append(kitchen.RoomObjects["стул"], &back)
+	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &tea)
+	room.RoomObjects["стол"] = append(room.RoomObjects["стол"], []Player.IItem{&key, &conspect}...)
 }

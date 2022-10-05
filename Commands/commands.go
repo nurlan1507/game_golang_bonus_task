@@ -47,7 +47,10 @@ func (c *Command) FirstLookAround() string {
 		for _, v := range v {
 			objects += ", " + v.GetItemName()
 		}
-		availableRoomObjectsString = availableRoomObjectsString + fmt.Sprintf("на %ve: %v", k, objects)
+		availableRoomObjectsString = availableRoomObjectsString + fmt.Sprintf("на %ve: %v", k, objects) + " "
+	}
+	if availableRoomObjectsString == "" {
+		return "пустая комната. можно пройти - " + availablePaths
 	}
 	return currentLocationString + availableRoomObjectsString + ", надо собрать рюкзак и идти в универ. " + "можно пройти - " + availablePaths
 }
