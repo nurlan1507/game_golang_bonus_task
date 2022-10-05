@@ -101,7 +101,7 @@ func INITMAP() {
 
 	//generate items
 	back := Player.Back{Items: nil, Capacity: 10, Name: "рюкзак"}
-	key := Player.Key{Name: "ключ"}
-	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &back)
+	key := Player.Key{Name: "ключи"}
+	kitchen.RoomObjects["стул"] = append(kitchen.RoomObjects["стул"], &back)
 	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &key)
 }

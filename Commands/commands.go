@@ -38,18 +38,18 @@ func (c *Command) FirstLookAround() string {
 	//var RoomObjects map[string]*Player.Item = currentLocation.RoomObjects
 	var availablePaths string
 	for _, v := range availableLocations {
-		availablePaths = availablePaths + ", " + v.Name
+		availablePaths = availablePaths + v.Name + ", "
 	}
 	var availableRoomObjectsString string = ""
-	currentLocationString := fmt.Sprintf("ты находишься на %vе ,", c.Spragat())
+	currentLocationString := fmt.Sprintf("ты находишься на %vе, ", c.Spragat())
 	for k, v := range currentLocation.RoomObjects {
 		var objects string = ""
 		for _, v := range v {
-			objects += v.GetItemName() + ", "
+			objects += ", " + v.GetItemName()
 		}
 		availableRoomObjectsString = availableRoomObjectsString + fmt.Sprintf("на %ve: %v", k, objects)
 	}
-	return currentLocationString + availableRoomObjectsString + ",надо собрать рюкзак и идти в универ. " + "можно пройти - " + availablePaths
+	return currentLocationString + availableRoomObjectsString + ", надо собрать рюкзак и идти в универ. " + "можно пройти - " + availablePaths
 }
 
 func (c *Command) GoHome() string {
@@ -79,18 +79,19 @@ func (c *Command) Go(goTo string) string {
 	if destinationNode == nil {
 		return fmt.Sprintf("нет пути в %v", goTo)
 	}
+	if destinationNode.Name == "улица" {
+		if c.CheckDoor() == true {
+			return fmt.Sprintf("на улице весна, можно пройти - домой")
+		}
+		return "дверь закрыта"
+	}
 	c.Player.Location = destinationNode
 
 	return c.DefineWhatInRoom()
 }
 
 func (c *Command) DefineWhatInRoom() string {
-	if c.Player.Location.Name == "улица" {
-		if c.CheckDoor() == true {
-			return fmt.Sprintf("на улице весна, можно пройти - домой")
-		}
-		return "дверь закрыта"
-	}
+
 	var availableLocations = c.GameMap.Edges[c.Player.Location]
 	var availableLocationsString string
 	for _, v := range availableLocations {
@@ -183,8 +184,6 @@ func (c *Command) CheckDoor() bool {
 
 func (c *Command) Spragat() string {
 	var str = c.Player.Location.Name
-	var length = len(str)
-	str = str[:length-1]
-	str = str + "е"
-	return str
+	newStr := str[:(len(str) - 2)]
+	return newStr
 }
