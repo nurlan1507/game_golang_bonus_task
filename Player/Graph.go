@@ -17,7 +17,8 @@ type GameMap struct {
 type Node struct {
 	Name           string
 	GameObjectType any
-	RoomObjects    map[string][]*Item
+	RoomObjects    map[string][]IItem
+	Door           *Door
 }
 
 func (g *GameMap) AddRoom(node *Node) *Node {
@@ -78,13 +79,3 @@ func (g *GameMap) Contains(node *Node) bool {
 	}
 	return false
 }
-
-//func (g *GameMap) PrintGraph() {
-//	for _, v := range g.Nodes {
-//		fmt.Printf("%v ->", *v)
-//		for i := 0; i < len(g.Edges[*v]); i++ {
-//			fmt.Printf("%+v , ", g.Edges[*v][i].Value)
-//		}
-//		fmt.Println()
-//	}
-//}

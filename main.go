@@ -70,6 +70,8 @@ func handleCommand(commandString string) string {
 		return Commands.Go(commands[1])
 	case "взять":
 		return fmt.Sprintf("%v", Commands.TakeItem(commands[1]))
+	case "применить":
+		return Commands.UseItem(commands[1], commands[2])
 	}
 	return "not implemented"
 }
@@ -83,11 +85,11 @@ func INITMAP() {
 
 	//generate map
 	var kitchen = Player.CreateRoom("кухня")
-	kitchen.RoomObjects = make(map[string][]*Player.Item)
+	//kitchen.RoomObjects = make(map[string][]*Player.Item)
 
 	var hall = Player.CreateRoom("коридор")
 	var outside = Player.CreateRoom("улица")
-	Player.GenerateDoor(outside)
+	hall.Door = Player.GenerateDoor(outside)
 	Graph.AddRoom(kitchen)
 	Graph.AddRoom(hall)
 	Graph.AddRoom(outside)
@@ -98,6 +100,8 @@ func INITMAP() {
 	Graph.PrintMap()
 
 	//generate items
-	back := Player.CreateItem("рюкзак", &Player.Back{Items: nil, Capacity: 10})
-	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], back)
+	back := Player.Back{Items: nil, Capacity: 10, Name: "рюкзак"}
+	key := Player.Key{Name: "ключ"}
+	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &back)
+	kitchen.RoomObjects["стол"] = append(kitchen.RoomObjects["стол"], &key)
 }

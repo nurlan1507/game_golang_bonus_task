@@ -7,14 +7,12 @@ type Room struct {
 
 // создание комнаты и добавление ее на карту
 func CreateRoom(roomName string) *Node {
-	//var room = Room{
-	//	RoomName:    roomName,
-	//	RoomObjects: []*RoomObject{},
-	//}
 
 	var newRoom = Node{
 		Name:           roomName,
 		GameObjectType: Room{},
+		Door:           nil,
+		RoomObjects:    map[string][]IItem{},
 	}
 	return &newRoom
 }

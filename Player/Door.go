@@ -1,7 +1,6 @@
 package Player
 
 type Door struct {
-	Item
 	Status bool
 	Name   string
 }

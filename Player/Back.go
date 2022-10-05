@@ -2,12 +2,19 @@ package Player
 
 import (
 	"errors"
+	"fmt"
 )
 
 type Back struct {
-	Item
-	Items    []*Item
+	IItem
+	Name     string
+	Items    []IItem
 	Capacity int
+}
+
+func (b *Back) GetItems(p *Player) string {
+	fmt.Println(b.Items)
+	return ""
 }
 
 func (b *Back) ItemInitAction(p *Player) string {
@@ -15,7 +22,10 @@ func (b *Back) ItemInitAction(p *Player) string {
 	return "ad"
 }
 
-func (b *Back) AddItem(item *Item) (*Back, error) {
+func (b *Back) GetItemName() string {
+	return b.Name
+}
+func (b *Back) AddItem(item IItem) (*Back, error) {
 	if len(b.Items) == b.Capacity {
 		return nil, errors.New("inventory is full")
 	}
@@ -23,13 +33,17 @@ func (b *Back) AddItem(item *Item) (*Back, error) {
 	return b, nil
 }
 
-func (b *Back) RemoveItem(item *Item) (*Back, error) {
+func (b *Back) RemoveItem(item IItem) (*Back, error) {
+	var index int
 	if len(b.Items) == 0 {
 		return nil, errors.New("inventory is empty")
 	} else {
 		for i, v := range b.Items {
 			if v == item {
-				b.Items = append(b.Items[:i], b.Items[i+1])
+				index = i
+				b.Items[index] = b.Items[len(b.Items)-1]
+				b.Items[len(b.Items)-1] = nil
+				b.Items = b.Items[:len(b.Items)-1]
 				return b, nil
 			}
 		}

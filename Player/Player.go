@@ -35,7 +35,6 @@ func (p *Player) ChangeLocation(location *Node) {
 }
 func (p *Player) GetBackPack(newBack *Back) {
 	p.Inventory = newBack
-	fmt.Println(p.Inventory.Items)
 	fmt.Printf("был создан инвентарь размером %v", p.Inventory.Capacity)
 }
 

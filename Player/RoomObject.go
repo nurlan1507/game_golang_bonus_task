@@ -3,13 +3,13 @@ package Player
 type RoomObject struct {
 	INode
 	RoomObjectName string
-	Items          []*Item
+	Items          []*IItem
 }
 
 func CreateRoomObject(roomObjectName string) *RoomObject {
 	var newRoomObject = RoomObject{
 		RoomObjectName: roomObjectName,
-		Items:          []*Item{},
+		Items:          []*IItem{},
 	}
 	return &newRoomObject
 }
